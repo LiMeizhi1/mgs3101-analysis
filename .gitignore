@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local Yahoo Finance cache (not analysis evidence)
+.yfinance-cache/

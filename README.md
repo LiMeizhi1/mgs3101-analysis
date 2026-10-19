@@ -29,13 +29,22 @@ responsibilities; actual participation must be reflected in the contribution his
 
 ## Why We Selected These Companies
 
-Tesla, BYD, and NIO compete in the electric vehicle industry.
-Comparing them allows us to examine how companies in the same
-industry can experience different stock performance and volatility.
+Our interest began with Elon Musk and the public attention surrounding Tesla.
+That motivated a research question rather than a conclusion about its risk:
+**Do stocks in the same EV industry show similar performance and daily-return
+volatility, or do company events produce different stories?**
 
-They differ in business scale, product range, and geographic
-exposure. These differences help frame our comparison, but the
-stock data alone cannot determine their effects on returns.
+We chose Tesla as our starting point and added BYD and NIO, two Chinese
+companies in the EV industry. This gives one U.S. company and two Chinese
+companies a shared industry setting for comparison. These three securities
+are a selected case study, not representative samples of the U.S., China,
+or Asia. We do not test the effect of Musk's personal publicity on returns.
+
+We compare a common date range, adjusted closes, normalized price indices,
+and percentage returns. Starting each price index at 100 avoids confusing
+share-price levels with performance. These methods support comparison but
+do not eliminate differences in liquidity, depositary structures, or business
+exposures, and do not identify the causes of return differences.
 
 ## Data and Study Period
 
@@ -113,7 +122,9 @@ Missing returns are not replaced with zeros; the correlation matrix uses
 The following results come from the saved notebook outputs.
 The [comparison notebook](comparison_analysis.ipynb) contains the combined
 price comparison, return statistics, boxplot, and correlation matrix.
-A fresh end-to-end run is still required before submission.
+All four notebooks were executed from fresh kernels during the October 17,
+2026 review; see the reproducibility note below for the environment and
+cache configuration.
 
 | Measure | Tesla | BYD | NIO |
 |---|---:|---:|---:|
@@ -160,6 +171,22 @@ Tesla had the smallest full-period decline (-12.64%), followed by BYD
 These describe performance and co-movement; they do not establish why
 prices changed.
 
+## Answer to the Research Question
+
+The three stocks shared an industry but did not share the same stock story.
+NIO had the highest daily-return standard deviation (3.24 percentage points),
+while Tesla had the largest single-day decline (-14.52%) but the smallest
+full-period loss (-12.64%). NIO's best day (+15.38%) coexisted with the largest
+full-period loss (-30.35%). Thus daily variability, an extreme event, and
+period performance describe different aspects of the sample.
+
+The BYD–NIO correlation was the highest at 0.419, but was far from perfect;
+Tesla's correlations were weaker. These results support treating company
+stories separately even within one industry. Earnings and sales reports offer
+plausible context for the selected events, not explanations for every price
+change or proof of causation. Daily-return volatility is only one dimension
+of investment risk, not a complete risk ranking.
+
 ## Significant Price Movements
 
 ### Tesla: July 23, 2026
@@ -184,12 +211,14 @@ the full study period.
 
 Reuters reported on February 1 that January vehicle sales fell 30.1%
 year over year [B1]. This preceded the February 2 U.S. session and offers
-a plausible demand-related explanation. The BYD notebook still needs its
-own full citation, chart captions, and clearly defined event-window evidence.
+a plausible demand-related explanation. The BYD notebook contains the full citation, chart captions, and an
+event-window table and chart with dated high and low adjusted closes.
 
-The BYD volume multiple uses the full-period average, while the
-Tesla multiple uses the previous 20 trading days. These ratios
-are not directly comparable.
+The January 26–February 9 BYD event window had a highest adjusted close
+of $12.95 on January 28 and a lowest of $11.22 on February 4. BYD's
+event-day volume was also 3.21 times its previous 20-trading-day average.
+Use that baseline when comparing with Tesla and NIO; the original 3.41
+ratio uses the full sample and is not directly comparable.
 
 ### NIO: March 10, 2026
 
@@ -216,8 +245,8 @@ The current Tesla notebook contains:
 - A close-up price chart around the July 23 decline.
 - A histogram of daily returns.
 
-The BYD notebook contains price, daily return, and trading volume
-charts.
+The BYD notebook contains price, daily return, trading volume, and an
+event-window price chart, with captions and supporting event evidence.
 
 The [comparison notebook](comparison_analysis.ipynb) contains:
 
@@ -232,7 +261,8 @@ The [NIO notebook](nio_analysis.ipynb) contains a March 3–17 event-window
 chart, a full-period normalized price chart, and a return histogram,
 with captions connecting the March 10 jump to the wider price pattern.
 Together with the Tesla event-window chart, the project contains all
-four required visualization types. BYD's chart captions remain to be added.
+four required visualization types. BYD also includes an event-window chart
+and captions for each of its four charts.
 
 ### One-Sentence Captions for the NIO and Group Charts
 
@@ -308,6 +338,34 @@ These questions remain unanswered by the current descriptive analysis.
 Charts and tables are displayed inside the notebooks.
 GitHub can display saved outputs, but it does not execute the code.
 
+## Reproducibility Verification
+
+On October 17, 2026, all four notebooks completed from fresh Python kernels
+in a newly created virtual environment, with no notebook error outputs and
+13 saved chart images. The environment used Python 3.12, yfinance 1.7.0,
+pandas 3.0.6, matplotlib 3.11.2, and ipykernel 7.4.0. The optional execution
+harness used nbclient 0.11.0 and nbformat 5.11.1; these are not needed for
+manual Run All in VS Code. Tested analysis dependencies are recorded in
+`requirements.txt`; install with `python -m pip install -r requirements.txt`.
+
+The first attempt failed because this review environment could not write
+yfinance's default cache. Verification used `yf.set_tz_cache_location(...)`
+to select a writable temporary folder before executing each notebook. This
+changed the cache location, not the downloaded data or analysis. If you see
+`unable to open database file`, run the following in your kernel before
+Run All (the directory will be created as needed):
+
+```python
+from pathlib import Path
+import yfinance as yf
+yf.set_tz_cache_location(str(Path(".yfinance-cache").resolve()))
+```
+
+An additional fresh download confirmed 194 prices per stock, 193 shared
+returns, the displayed rounded period changes and standard deviations,
+and correlations of 0.163, 0.237, and 0.419. Yahoo Finance can revise data;
+a future run is not guaranteed to be numerically identical.
+
 ## Sources
 
 - Historical stock data: [Yahoo Finance](https://finance.yahoo.com/),
@@ -327,14 +385,13 @@ GitHub can display saved outputs, but it does not execute the code.
 
 ## Work Remaining Before Submission
 
-- [ ] Add the reference above to BYD's own notebook, complete its chart captions and
-      event-window evidence. A BYD monthly table would be optional additional
-      coverage; the project already includes time-grouped summaries.
+- [x] Add BYD's full source, chart captions, and event-window identification
+      code with dated high/low output and a supporting chart.
 - [ ] Finish checking financial claims in the unchanged company notebooks;
       the sources used in this README and NIO explanation were readable
       during this review, but accessibility can change.
-- [ ] Restart and run all four notebooks from beginning to end in a clean
-      environment, save outputs, and reconcile any changed data with the text.
+- [x] Run all four notebooks from fresh kernels in an isolated environment,
+      save successful outputs, and reconcile the reported metrics (October 17, 2026).
 - [ ] Confirm the repository is public and all three members are collaborators.
 - [ ] Confirm every member has at least three meaningful commits and all seven
       work-item stages have an incremental commit. The reviewed local history
