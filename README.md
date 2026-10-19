@@ -8,12 +8,16 @@ events may help explain a significant price movement for each company?
 
 ## Business Story Overview
 
-The project compares three EV securities over one shared period and asks
-whether large company-event reactions tell the same story as full-period
-performance. It examines a Tesla earnings-period sell-off, a BYD decline
-after vehicle-sales news, and a NIO jump on its results date. Event timing,
-returns, and volume support possible explanations; they do not prove causes.
-The findings below connect each event to the relevant charts and sources.
+Our central question is how the conclusion changes with the measure and
+the horizon. The three-company comparison now tests whether NIO's volatility
+ranking depends on its largest day, whether the correlation ordering depends
+on the three researched dates, and how the price reaction develops over the
+next five trading days. This turns headline contrasts into inspectable checks.
+
+The business cases concern different information: Tesla's investment costs,
+BYD's sales, and NIO's reported profitability. The associated return and volume
+patterns support possible explanations; they do not prove causes. The later
+price path is examined separately rather than assigned to one announcement.
 
 ## Team Members
 
@@ -86,6 +90,12 @@ We use Python, pandas, and matplotlib to:
 5. Investigate at least one significant price movement per company.
 6. Compare normalized prices and daily return distributions.
 7. Calculate correlations between the companies' daily returns.
+8. Compare middle-50% return ranges and daily standard deviations after
+   excluding each stock's own largest absolute move as a sensitivity check.
+9. Compare observed closing-price drawdowns and correlations excluding
+   the three researched event dates.
+10. Use a common trailing 20-day volume baseline and day +5 event horizon;
+    decompose NIO's observed period return into multiplicative price factors.
 
 ### Data Handling and Visualization Tools
 
@@ -135,57 +145,65 @@ cache configuration.
 | Minimum daily return (%) | -14.52 | -6.55 | -7.81 |
 | Maximum daily return (%) | 8.46 | 8.06 | 15.38 |
 
-### Three Findings Linking Data, Charts, and Business Explanations
+### Findings beyond the headline rankings
 
-1. **Tesla: the earnings-period decline was unusually large and active.**
-   The Tesla event-window chart shows the July 23 decline of 14.52%; the
-   group boxplot places it below the other stocks' worst daily returns.
-   Volume was 2.97 times the prior 20-day average. Tesla released results
-   on July 22 [T1], and Reuters reported investment-related cash burn [T2].
-   The timing and trading activity are consistent with concerns about
-   profitability and investment costs, but cannot isolate the cause.
+**1. NIO's high variability extends beyond one favorable outlier.** Removing
+each stock's largest absolute return leaves standard deviations of 3.05 pp for
+NIO, 2.67 for Tesla and 2.31 for BYD, preserving the original ranking. NIO also
+has the widest interquartile range (3.99 pp versus 3.60 and 2.69). This supports
+a broader variability finding rather than attributing its rank to the single
+15.38% gain. Exclusions are diagnostics; original observations remain in the
+main charts. BYD's excluded extreme is its March 16 gain, not its case-study decline.
 
-2. **BYD: the sales-news decline coincided with elevated trading.**
-   The BYD daily-return chart shows February 2 at -6.55%, and its volume
-   chart shows 5,599,500 shares, 3.41 times the full-period average.
-   Reuters reported January sales down 30.1% on February 1 [B1], before
-   the next U.S. trading session. The negative return and high activity
-   fit a demand-concern explanation. The report concerns company sales,
-   not a direct measurement of BYDDY investor motives; the full-period
-   volume baseline also includes observations after the event.
+**2. Endpoint loss and losses along the path are different.** Tesla has the
+smallest period decline (12.64%) but the worst single day (14.52%). NIO's
+deepest observed closing-price drawdown is 50.95%, compared with 35.09% for
+BYD and 33.95% for Tesla. For NIO, starting-to-ending loss of 30.35% therefore
+does not describe the largest peak-to-later-trough decline observed within the
+sample. Drawdowns use running closing-price peaks, not all-time or intraday peaks.
 
-3. **NIO: the profitability report fits the March jump, not the whole trend.**
-   The NIO event chart and return histogram highlight March 10 at +15.38%,
-   with volume 4.06 times the prior 20-day average. Official results [N1]
-   showed positive quarterly net profit. Tesla +0.14% and BYD -1.84%
-   that day provide a contrasting peer check, consistent with NIO-specific
-   news but not excluding market influences. The normalized comparison
-   chart ends NIO at -30.35% for the full period, showing why one event
-   explanation cannot account for the entire sample.
+**3. BYD–NIO remains the strongest pair after the case dates are excluded.**
+Removing July 23, February 2 and March 10 leaves 190 shared returns. BYD–NIO
+correlation is 0.461, Tesla–NIO 0.263 and Tesla–BYD 0.160, compared with
+0.419, 0.237 and 0.163 in the full sample. The ordering is not solely created
+by the selected events. This does not establish statistical significance,
+future stability, or a country or business-model explanation.
 
-### Further Descriptive Comparisons
+**4. Similar trading intensity does not imply the same event path.** Using
+the same prior-20-day baseline, volume multiples are 2.97 for Tesla, 3.21 for
+BYD and 4.06 for NIO. From the pre-event close through five trading days after
+the event, changes are −17.42%, −2.99% and +20.65%, respectively. BYD's
+rebound only partly recovers its initial loss; Tesla falls further; NIO retains
+and extends its gain. Elevated volume measures activity, not bullishness.
+The company reports are documented below [T1, T2, B1, N1]. The cases were
+selected retrospectively for large moves, so they do not estimate the average
+response to announcements.
 
-Tesla had the smallest full-period decline (-12.64%), followed by BYD
-(-24.09%) and NIO (-30.35%). BYD and NIO had the highest return correlation
-(0.419); Tesla's correlations with BYD (0.163) and NIO (0.237) were weaker.
-These describe performance and co-movement; they do not establish why
-prices changed.
+**5. NIO's local gain survives the pullback, but a later decline outweighs it.**
+The March 11 close remains 10.73% above March 9, and March 17 remains 20.65%
+above it. The path then needs a longer horizon: the event-close-to-final-close
+change is −37.19%. NIO's pre-event −3.89%, event-day +15.38%, and post-event
+−37.19% multiply as price factors to produce the full-period −30.35%. They
+must not be added. This establishes how the observations fit together, not
+what would have happened without the report or why the later decline occurred.
+
+The supporting code and saved tables are in the
+[comparison notebook](comparison_analysis.ipynb) and
+[NIO notebook](nio_analysis.ipynb).
 
 ## Answer to the Research Question
 
-The three stocks shared an industry but did not share the same stock story.
-NIO had the highest daily-return standard deviation (3.24 percentage points),
-while Tesla had the largest single-day decline (-14.52%) but the smallest
-full-period loss (-12.64%). NIO's best day (+15.38%) coexisted with the largest
-full-period loss (-30.35%). Thus daily variability, an extreme event, and
-period performance describe different aspects of the sample.
+The evidence supports comparing **multiple dimensions and horizons**, rather
+than assigning the three stocks one overall risk or performance ranking.
+NIO's volatility contrast survives a one-extreme-day check, while Tesla's
+relatively smaller endpoint decline coexists with the worst daily loss.
+The strongest return relationship survives removal of the researched dates,
+but the stocks are still not interchangeable examples of an EV-industry move.
 
-The BYD–NIO correlation was the highest at 0.419, but was far from perfect;
-Tesla's correlations were weaker. These results support treating company
-stories separately even within one industry. Earnings and sales reports offer
-plausible context for the selected events, not explanations for every price
-change or proof of causation. Daily-return volatility is only one dimension
-of investment risk, not a complete risk ranking.
+Company reports help interpret the selected local events. NIO's retained
+day +5 gain and subsequent larger decline show why local reaction and
+longer-period performance need separate explanations. These are descriptive
+findings and sensitivity checks, not causal effects or investment advice.
 
 ## Significant Price Movements
 
@@ -233,6 +251,11 @@ first quarterly net profit, providing a plausible profitability-related
 explanation for the jump. The timing and volume fit that explanation,
 but do not establish causation. Tesla gained 0.14% and BYD fell 1.84%
 that day; this contrast does not rule out market or industry influences.
+The new horizon table also shows that the next-day close remained 10.73%
+above the pre-event baseline; day +5 remained 20.65% above it. From the
+event close to October 9, however, the price fell 37.19%. These observations
+distinguish a locally retained gain from a later reversal without explaining
+that reversal's business causes.
 See the [NIO notebook](nio_analysis.ipynb) for evidence and references,
 including NIO's official financial results [N1] and contemporaneous
 Sina Finance / Gelonghui reporting [N2].
@@ -294,6 +317,10 @@ month. Monthly average price levels are not monthly percentage returns.
   News timing alone cannot prove the cause of a price movement.
 - Depositary securities and differences in liquidity can affect
   comparisons.
+- Extreme days and case dates were chosen after observing returns. These
+  sensitivity checks do not turn selected cases into representative samples
+  or estimate abnormal returns. No significance tests or causal event study
+  are claimed.
 - Data retrieved again from Yahoo Finance may change because of
   revisions or price adjustments.
 - Mean daily returns are arithmetic averages and should not be
@@ -339,6 +366,15 @@ Charts and tables are displayed inside the notebooks.
 GitHub can display saved outputs, but it does not execute the code.
 
 ## Reproducibility Verification
+
+On October 19, 2026, the revised comparison and NIO notebooks were executed
+top-to-bottom from separate fresh kernels with a new download of the same
+study period. Both retained their three original charts, with no error
+outputs. Their added risk, correlation, event-horizon and price-factor tables
+were checked against the downloaded observations. The price-factor product
+also reconciles independently to the direct first-to-last price ratio.
+Tesla and BYD notebooks were not edited in this analysis revision. The
+earlier four-notebook verification is recorded below.
 
 On October 17, 2026, all four notebooks completed from fresh Python kernels
 in a newly created virtual environment, with no notebook error outputs and
